@@ -1,0 +1,85 @@
+)
+📦 Component Tree (How Everything Connects)
+App
+ │
+ ├ Provider (Redux)
+ ├ ThemeProvider
+ └ Router
+     │
+     └ DashboardLayout
+         │
+         ├ Sidebar
+         │   └ ProfileSection
+         │
+         ├ Header
+         │
+         └ Pages
+             ├ Dashboard
+             │   ├ ProgressCard
+             │   └ StatisticsChart
+             │
+             ├ GoalsPage
+             │   └ GoalCard
+             │
+             ├ SchedulePage
+             │   └ ScheduleRow
+             │
+             ├ AchievementsPage
+             │   └ AchievementCard
+             │
+             ├ StatisticsPage
+             │   └ StatisticsChart
+             │
+             └ SettingsPage
+
+
+
+             🚀 Recommended Build Order
+
+Don't build everything at once.
+
+Build in this order:
+
+1 Sidebar
+2 Header
+3 DashboardLayout
+4 Dashboard page
+5 Cards
+6 Charts
+7 Goals page
+8 Schedule page
+9 Achievements page
+10 Settings page
+11 Redux integration
+
+
+In Your Project
+
+Your layout component will contain:
+
+Sidebar
+Profile Section
+Header
+Main Content Area
+
+Pages that will use this layout:
+
+Dashboard
+Goals
+Schedule
+Achievements
+Statistics
+Settings
+
+🔹 2️⃣ App.jsx (Routing System)
+BrowserRouter → enables routing
+Routes → container for routes
+Route → defines each path
+
+flex: 1 --> takes remaining space
+
+
+🧠 What these do:
+Hook	Purpose
+useSelector	Read data from Redux
+useDispatch	Send data to Redux
