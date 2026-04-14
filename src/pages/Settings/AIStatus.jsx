@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-const AIStatusOverlay = ({ open, status, message }) => {
+const AIStatus = ({ open, status, message }) => {
   return (
     <AnimatePresence>
       {open && (
@@ -63,4 +64,5 @@ const AIStatusOverlay = ({ open, status, message }) => {
   );
 };
 
-export default AIStatusOverlay;
+export default AIStatus;
+

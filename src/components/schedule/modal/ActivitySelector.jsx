@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Typography } from "@mui/material";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import RestaurantIcon from "@mui/icons-material/Restaurant";

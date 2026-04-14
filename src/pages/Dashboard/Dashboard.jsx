@@ -1,3 +1,4 @@
+import React from "react";
 import { Box } from "@mui/material";
 
 import CardsSection from "../../components/cards/CardsSection";
