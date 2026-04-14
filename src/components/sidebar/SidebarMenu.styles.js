@@ -4,14 +4,15 @@ import { Box } from "@mui/material";
 export const StyledMenuItem = styled(Box)(({ active }) => ({
   display: "flex",
   alignItems: "center",
-  padding: "12px 14px",
-  borderRadius: "10px",
+  padding: "12px 16px",
+  borderRadius: "12px",
   marginBottom: "8px",
   cursor: "pointer",
-  background: active ? "#eef3ff" : "transparent",
+
+  background: active ? "#EEF2FF" : "transparent",
 
   "&:hover": {
-    background: "#f3f5fa",
+    background: "#F9FAFB",
   },
 }));
 

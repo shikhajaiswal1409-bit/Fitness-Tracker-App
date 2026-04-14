@@ -17,13 +17,13 @@ const ProgressCard = ({ title, icon, progress, value, unit, target, type }) => {
       <CardTop>
 
         <Box>
-          <Typography fontSize={30} color={commonColors.white}>
-            {title}
-          </Typography>
+          <Typography fontSize={18} opacity={0.9}>
+  {title}
+</Typography>
 
-          <Typography fontSize={20} color={commonColors.white}>
-            {value} {unit}
-          </Typography>
+<Typography fontSize={34} fontWeight={700}>
+  {value} {unit}
+</Typography>
         </Box>
 
         <IconWrapper>

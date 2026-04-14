@@ -1,8 +1,6 @@
-
-
 import React from "react";
-import { Tabs, Tab } from "@mui/material";
 import { getWeekData, formatDateKey } from "../../utils/dateUtils";
+import { TabsWrapper, TabItem } from "./WeekTabs.styles";
 
 const WeekTabs = ({ selectedDay, setSelectedDay }) => {
 
@@ -20,26 +18,25 @@ const WeekTabs = ({ selectedDay, setSelectedDay }) => {
     };
   });
 
-  // ✅ ensure selected day always valid
   const validSelected =
     days.find((d) => d.value === selectedDay?.value) || days[0];
 
   return (
-    <Tabs
-      value={validSelected.value}  // ✅ SAFE VALUE
-      onChange={(e, newValue) => {
-        const selected = days.find((d) => d.value === newValue);
-        setSelectedDay(selected);
-      }}
-    >
-      {days.map((d) => (
-        <Tab
-          key={d.value}
-          label={`${d.label} (${d.date.getDate()})`}
-          value={d.value}
-        />
-      ))}
-    </Tabs>
+    <TabsWrapper>
+      {days.map((d) => {
+        const isActive = d.value === validSelected.value;
+
+        return (
+          <TabItem
+            key={d.value}
+            active={isActive}
+            onClick={() => setSelectedDay(d)}
+          >
+            {d.label} ({d.date.getDate()})
+          </TabItem>
+        );
+      })}
+    </TabsWrapper>
   );
 };
 

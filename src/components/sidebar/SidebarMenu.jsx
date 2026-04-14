@@ -12,6 +12,7 @@ import {
   StyledMenuIcon,
   StyledMenuText,
 } from "./SidebarMenu.styles";
+import { useSelector } from "react-redux";
 
 const menuItems = [
   { label: "Home", icon: <HomeIcon />, path: "/" },
@@ -22,6 +23,8 @@ const menuItems = [
 ];
 
 const SidebarMenu = () => {
+  const profile = useSelector((state) => state.profile);
+const isLocked = !profile.name || !profile.goal;
   return (
     <List>
       {menuItems.map((item) => (
@@ -31,8 +34,10 @@ const SidebarMenu = () => {
           style={{ textDecoration: "none" }}
         >
           {({ isActive }) => (
-            <StyledMenuItem active={isActive}>
-              <StyledMenuIcon active={isActive}>
+<StyledMenuItem active={isActive} style={{
+  opacity: isLocked ? 0.5 : 1,
+  pointerEvents: isLocked ? "none" : "auto"
+}}>              <StyledMenuIcon active={isActive}>
                 {item.icon}
               </StyledMenuIcon>
 

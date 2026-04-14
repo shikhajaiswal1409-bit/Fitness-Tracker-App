@@ -90,26 +90,34 @@ export const calculateStreak = (schedule, profile) => {
 export const getSuggestion = (goal, net, tolerance) => {
 
   if (goal === "muscles") {
-    if (net < 0) return "You're in deficit — eat more 🍗";
-    if (net < 200) return "Slight surplus — increase calories 💪";
-    return "Perfect muscle gain zone 🔥";
+    if (net < 0)
+      return "Hey 👋 you're running low on fuel today. Try adding a protein-rich meal to support muscle growth.";
+
+    if (net < 200)
+      return "You're doing good 👍 just a bit more calories and you'll be in the perfect muscle-building zone.";
+
+    return "Nice work 💪 you're exactly where you need to be for building muscle today.";
   }
 
   if (goal === "weight") {
-    if (net > 0) return "Calorie surplus — reduce intake ⚠️";
-    if (net > -200) return "Small deficit — push harder 🏃";
-    return "Great fat loss zone 🔥";
+    if (net > 0)
+      return "Looks like you're in a calorie surplus ⚠️ maybe go for a short walk or adjust your next meal.";
+
+    if (net > -200)
+      return "You're on the right track 🚀 push a little more to improve fat loss.";
+
+    return "Great job 🔥 you're in an effective calorie deficit today.";
   }
 
   if (goal === "balance") {
     if (Math.abs(net) > tolerance)
-      return "Try balancing intake & burn ⚖️";
-    return "Perfect balance 👍";
+      return "You're slightly off balance today ⚖️ try to even things out with food or activity.";
+
+    return "Everything looks balanced 👌 keep maintaining this consistency.";
   }
 
   return "";
 };
-
 
 
 //  NET COLOR (moved from UI → logic)

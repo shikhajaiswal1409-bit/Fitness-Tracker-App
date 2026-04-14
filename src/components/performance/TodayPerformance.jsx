@@ -1,6 +1,23 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Typography, Box, IconButton } from "@mui/material";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+
+import {
+  CardContainer,
+  HeaderRow,
+  StatsRow,
+  StatBox,
+  NetBox,
+  StatusBadge,
+  ProgressBar,
+  AssistantContainer,
+  AvatarCircle,
+  ChatBubble,
+  TypingDots,
+  TopAccent,
+  ActionButton
+} from "./TodayPerformance.styles";
 
 const TodayPerformance = ({
   gained,
@@ -12,87 +29,144 @@ const TodayPerformance = ({
   netColor
 }) => {
 
-  const statusColor = status === "ON TRACK" ? "#22c55e" : "#ef4444";
+  const [isThinking, setIsThinking] = useState(true);
+
+  // 🎤 Speak function
+  const speak = (text) => {
+    if (!window.speechSynthesis) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // 🤖 Thinking effect
+  useEffect(() => {
+    setIsThinking(true);
+
+    const timer = setTimeout(() => {
+      setIsThinking(false);
+      if (suggestion) speak(suggestion);
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [suggestion]);
+
+  // 📊 Progress
+  const progress = Math.min(100, Math.max(0, 50 + net / 10));
+
+  // 🎯 Action
+  const getAction = () => {
+    if (status === "OFF TRACK") {
+      return net > 0 ? "Go for a walk 🚶" : "Eat something 🍗";
+    }
+    return "Keep it up 💪";
+  };
 
   return (
-    <Box
-      sx={{
-        mt: 3,
-        p: 3,
-        borderRadius: "16px",
-        background: "#ffffff",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
-      }}
-    >
+    <CardContainer>
+
+      <TopAccent />
+
       {/* HEADER */}
-      <Box display="flex" alignItems="center" gap={1} mb={2}>
-        <WhatshotIcon sx={{ color: "#ff6b6b" }} />
-        <Typography fontSize={22} fontWeight={600}>
+      <HeaderRow>
+        <WhatshotIcon sx={{ color: "#f97316" }} />
+        <Typography fontSize={22} fontWeight={700}>
           Today Performance
         </Typography>
-      </Box>
+      </HeaderRow>
 
       {/* STATS */}
-      <Box display="flex" justifyContent="space-between" mb={2}>
-        <Box>
-          <Typography color="text.secondary">Calories Gained</Typography>
-          <Typography fontSize={20} fontWeight={600}>
+      <StatsRow>
+        <StatBox>
+          <Typography fontSize={13} color="text.secondary">
+            Calories Gained
+          </Typography>
+          <Typography fontSize={24} fontWeight={700}>
             {gained} kcal
           </Typography>
-        </Box>
+        </StatBox>
 
-        <Box>
-          <Typography color="text.secondary">Calories Burned</Typography>
-          <Typography fontSize={20} fontWeight={600}>
+        <StatBox>
+          <Typography fontSize={13} color="text.secondary">
+            Calories Burned
+          </Typography>
+          <Typography fontSize={24} fontWeight={700}>
             {burned} kcal
           </Typography>
-        </Box>
-      </Box>
+        </StatBox>
+      </StatsRow>
 
       {/* NET */}
-      <Box mb={2}>
-        <Typography color="text.secondary">Net Calories</Typography>
-        <Typography
-          fontSize={22}
-          fontWeight={700}
-          color={netColor}
-        >
+      <NetBox>
+        <Typography color="text.secondary">
+          Net Calories
+        </Typography>
+
+        <Typography fontSize={24} fontWeight={800} color={netColor}>
           {net > 0 ? "+" : ""}
           {net} kcal
         </Typography>
-      </Box>
+      </NetBox>
+
+      {/* PROGRESS */}
+      <ProgressBar progress={progress} />
 
       {/* STATUS */}
-      <Box
-        sx={{
-          mt: 2,
-          px: 2,
-          py: 1,
-          borderRadius: "20px",
-          display: "inline-block",
-          fontWeight: 600,
-          color: "#fff",
-          background: statusColor
-        }}
-      >
+      <StatusBadge status={status}>
         {status}
-      </Box>
+      </StatusBadge>
 
-      {/* SUGGESTION */}
+      {/* 🤖 AI Assistant */}
       {suggestion && (
-        <Typography mt={2} color="text.secondary">
-          {suggestion}
-        </Typography>
+        <AssistantContainer>
+
+          <AvatarCircle>⚡</AvatarCircle>
+
+          <Box>
+
+            {isThinking ? (
+              <TypingDots>
+                <span></span>
+                <span></span>
+                <span></span>
+              </TypingDots>
+            ) : (
+              <>
+                <ChatBubble>
+                  {suggestion}
+
+                  <IconButton
+                    size="small"
+                    onClick={() => speak(suggestion)}
+                  >
+                    <VolumeUpIcon fontSize="small" />
+                  </IconButton>
+                </ChatBubble>
+
+                <ActionButton>
+                  {getAction()}
+                </ActionButton>
+              </>
+            )}
+
+          </Box>
+
+        </AssistantContainer>
       )}
 
-      {/* STREAK */}
-      <Box mt={2} display="flex" alignItems="center" gap={1}>
-        <WhatshotIcon sx={{ color: "#ff6b6b" }} />
+      {/* 🔥 STREAK */}
+      <Box display="flex" alignItems="center" gap={1}>
+        <WhatshotIcon sx={{ color: "#f97316" }} />
         <Typography fontWeight={600}>
           {streak} day streak
         </Typography>
       </Box>
-    </Box>
+
+    </CardContainer>
   );
 };
 

@@ -1,19 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  Box,
-  Button,
-  Typography,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  IconButton
-} from "@mui/material";
-
+import { IconButton, Typography, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -22,19 +10,42 @@ import { deleteActivity } from "../../../features/schedule/scheduleSlice";
 
 import EditActivityModal from "../modal/EditActivityModal";
 
+import {
+  Container,
+  Header,
+  Timeline,
+  ActivityCard,
+  ActivityInfo,
+  ActivityTitle,
+  ActivityMeta,
+  Actions,
+  AddButton
+} from "./DaySchedule.styles";
+
+
+// 🔥 EMPTY STATE
+const EmptyState = () => (
+  <Box textAlign="center" py={6}>
+    <Typography fontSize={20} fontWeight={600}>
+      No activities yet 🚀
+    </Typography>
+    <Typography color="text.secondary">
+      Start building your day
+    </Typography>
+  </Box>
+);
+
+
 const DaySchedule = ({ day, handleOpen }) => {
 
   const schedule = useSelector((state) => state.schedule);
   const dispatch = useDispatch();
 
-  // DATE KEY
   const key = formatDateKey(day.date);
   const activities = schedule[key] || [];
 
-  //  FUTURE FIX
   const isFuture = isFutureDate(new Date(day.date));
 
-  //  EDIT STATE
   const [editData, setEditData] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
@@ -45,118 +56,67 @@ const DaySchedule = ({ day, handleOpen }) => {
     setOpenEdit(true);
   };
 
+  // 🎨 COLORS
+  const getColor = (type) => {
+    if (type === "exercise") return "#3A8DFF";
+    if (type === "meal") return "#FF5F6D";
+    if (type === "sleep") return "#22C55E";
+    return "#999";
+  };
+
   return (
-    <Box>
+    <Container>
 
       {/* HEADER */}
-      <Typography fontSize={20} fontWeight={600} mb={2}>
+      <Header>
         {day.label}, {new Date(day.date).toDateString()}
-      </Typography>
+      </Header>
 
-      {/* MAIN CARD */}
-      <Paper
-        sx={{
-          p: 3,
-          borderRadius: "16px",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-        }}
-      >
+      {/* TIMELINE */}
+      {activities.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <Timeline>
 
-        {/* ACTIVITY OVERVIEW */}
-        <Box mb={3}>
-          <Typography fontWeight={500}>
-            Activities Overview
-          </Typography>
+          {activities.map((a, i) => (
+            <ActivityCard key={i} color={getColor(a.type)}>
 
-          <Box display="flex" gap={2} mt={1} flexWrap="wrap">
-            {activities.map((a, i) => (
-              <Box
-                key={i}
-                sx={{
-                  px: 2,
-                  py: 1,
-                  borderRadius: "8px",
-                  background: "#f3f5fa",
-                }}
-              >
-                {a.title || a.type}
-              </Box>
-            ))}
-          </Box>
-        </Box>
+              <ActivityInfo>
+                <ActivityTitle>
+                  {a.title || a.type.toUpperCase()}
+                </ActivityTitle>
 
-        {/* ADD BUTTON */}
-        <Button
-          variant="contained"
-          onClick={handleOpen}
-          disabled={isFuture}
-        >
+                <ActivityMeta>
+                  {a.time || `${a.hours || 0} hrs`} • {a.calories ?? 0} kcal
+                </ActivityMeta>
+              </ActivityInfo>
+
+              <Actions>
+                <IconButton onClick={() => handleEdit(i, a)}>
+                  <EditIcon />
+                </IconButton>
+
+                <IconButton
+                  onClick={() =>
+                    dispatch(deleteActivity({ dateKey: key, index: i }))
+                  }
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Actions>
+
+            </ActivityCard>
+          ))}
+
+        </Timeline>
+      )}
+
+      {/* ADD BUTTON */}
+      {!isFuture && (
+        <AddButton onClick={handleOpen}>
           + Add Activity
-        </Button>
-
-        {/* TABLE */}
-        <Box mt={3}>
-          <Table>
-
-            <TableHead>
-              <TableRow>
-                <TableCell><b>Type</b></TableCell>
-                <TableCell><b>Name</b></TableCell>
-                <TableCell><b>Duration</b></TableCell>
-                <TableCell><b>Calories</b></TableCell>
-                <TableCell><b>Actions</b></TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {activities.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} align="center">
-                    No activities added
-                  </TableCell>
-                </TableRow>
-              ) : (
-                activities.map((a, i) => (
-                  <TableRow key={i}>
-
-                    <TableCell>{a.type}</TableCell>
-                    <TableCell>{a.title || "-"}</TableCell>
-                    <TableCell>{a.time || a.hours || "-"}</TableCell>
-                    <TableCell>{a.calories ?? "-"}</TableCell>
-
-                    {/* ACTION BUTTONS */}
-                    <TableCell>
-
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEdit(i, a)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-
-                      <IconButton
-                        color="error"
-                        onClick={() =>
-                          dispatch(deleteActivity({
-                            dateKey: key,
-                            index: i
-                          }))
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-
-                    </TableCell>
-
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-
-          </Table>
-        </Box>
-
-      </Paper>
+        </AddButton>
+      )}
 
       {/* EDIT MODAL */}
       <EditActivityModal
@@ -167,7 +127,7 @@ const DaySchedule = ({ day, handleOpen }) => {
         day={day}
       />
 
-    </Box>
+    </Container>
   );
 };
 

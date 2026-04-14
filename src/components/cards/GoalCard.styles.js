@@ -2,15 +2,15 @@ import styled from "@emotion/styled";
 import {Box} from "@mui/material"
 import { commonColors, goalGradients } from "../../styles/colors";
 
-export const GoalContainer= styled(Box)(()=>({
-display: "flex",
+export const GoalContainer = styled(Box)(() => ({
+  display: "flex",
   alignItems: "center",
-  padding: "20px",
-  borderRadius: "16px",
-  color: "#808080", 
+  padding: "24px",
+  borderRadius: "20px",
+  background: "#fff",
   marginBottom: "20px",
-boxShadow: "0 15px 40px rgba(0,0,0,0.12)"
-}))
+  boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+}));
 
 export const IconWrapper = styled(Box)(({type})=>({
     width: "60px",
@@ -36,19 +36,17 @@ export const ProgressText = styled(Box)(()=>({
 }))
 
 export const StatusBadge = styled(Box)(({ status }) => ({
-  marginTop: "80px",
-  padding: "4px 10px",
-  // width: "100px",
-  display: "flex",
-  justifyContent: "center",
-  borderRadius: "20px",
-  fontSize: "22px",
+  marginTop: "10px",
+  padding: "6px 14px",
+  borderRadius: "999px",
+  fontSize: "14px",
   fontWeight: 600,
   color: "#fff",
+  width: "fit-content",
+
   background:
     status === "ON TRACK"
-      ? "#6aac82"   // green
-      : "#da8686",  // red
+      ? "#22c55e"
+      : "#ef4444",
 }));
-
 

@@ -1,19 +1,25 @@
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
-import { cardGradients, commonColors } from "../../styles/colors";
+import { cardGradients} from "../../styles/colors";
 
 export const CardItem = styled(Box)(({ type }) => ({
-  background: cardGradients[type] || commonColors.cardBackground,
-  borderRadius: "16px",
-  padding: "20px",
+  background: cardGradients[type],
+  borderRadius: "20px",
+  padding: "24px",
   width: "320px",
   minWidth: "320px",
-  color: commonColors.white,
+  color: "#fff",
   display: "flex",
   flexDirection: "column",
-  justifyContent: "space-between"
-}));
+  justifyContent: "space-between",
 
+  boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+  transition: "0.3s",
+
+  "&:hover": {
+    transform: "translateY(-6px)",
+  }
+}));
 export const CardTop = styled(Box)(() => ({
   display: "flex",
   justifyContent: "space-between",
@@ -37,7 +43,7 @@ export const ProgressWrapper = styled(Box)(() => ({
 
 export const ProgressText = styled(Box)(() => ({
   position: "absolute",
-  fontSize: "18px",
-  fontWeight: 600,
+  fontSize: "16px",
+  fontWeight: 700,
   color: "#fff"
 }));

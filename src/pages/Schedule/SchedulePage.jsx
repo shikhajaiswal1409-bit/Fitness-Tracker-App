@@ -1,13 +1,12 @@
-
-
 import React, { useState } from "react";
-import { Box } from "@mui/material";
 
 import ScheduleHeader from "../../components/schedule/scheduleHeader/ScheduleHeader";
 import WeekTabs from "../../components/schedule/weekTabs/WeekTabs";
 import DaySchedule from "../../components/schedule/daySchedule/DaySchedule";
 import AddActivityModal from "../../components/schedule/modal/AddActivityModal";
+
 import { formatDateKey } from "../../components/utils/dateUtils";
+import { PageContainer } from "./Schedule.styles";
 
 const SchedulePage = () => {
 
@@ -22,35 +21,27 @@ const SchedulePage = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Box p={3}>
+    <PageContainer>
 
-      {/*  HEADER */}
-      <Box mb={3}>
-        <ScheduleHeader />
-      </Box>
+      <ScheduleHeader />
 
-      {/*  WEEK TABS */}
-      <Box mb={3}>
-        <WeekTabs
-          selectedDay={selectedDay}
-          setSelectedDay={setSelectedDay}
-        />
-      </Box>
+      <WeekTabs
+        selectedDay={selectedDay}
+        setSelectedDay={setSelectedDay}
+      />
 
-      {/*  DAY SECTION */}
       <DaySchedule
         day={selectedDay}
         handleOpen={() => setOpen(true)}
       />
 
-      {/*  MODAL */}
       <AddActivityModal
         open={open}
         handleClose={() => setOpen(false)}
         day={selectedDay}
       />
 
-    </Box>
+    </PageContainer>
   );
 };
 

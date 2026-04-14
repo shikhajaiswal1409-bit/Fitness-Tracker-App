@@ -1,17 +1,14 @@
-
 import React, { useState } from "react";
-import { Box, TextField, Button, IconButton } from "@mui/material";
+import { Box, TextField, Button, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch } from "react-redux";
 
 import { addActivity } from "../../../features/schedule/scheduleSlice";
 import { formatDateKey } from "../../utils/dateUtils";
-import {
-  isValidTime,
-  convertTo24Hour
-} from "../../utils/timeUtils";
+import { isValidTime, convertTo24Hour } from "../../utils/timeUtils";
 
 const DynamicActivityForm = ({ type, day, handleClose }) => {
+
   const dispatch = useDispatch();
 
   const [forms, setForms] = useState([
@@ -20,63 +17,34 @@ const DynamicActivityForm = ({ type, day, handleClose }) => {
 
   const [errors, setErrors] = useState([{}]);
 
-  //  HANDLE INPUT CHANGE
   const handleChange = (index, field, value) => {
-    const updatedForms = [...forms];
-    updatedForms[index][field] = value;
-    setForms(updatedForms);
+    const updated = [...forms];
+    updated[index][field] = value;
+    setForms(updated);
   };
 
-  //  ADD NEW FORM
   const addForm = () => {
-    setForms([
-      ...forms,
-      { name: "", time: "", calories: "", hours: "" }
-    ]);
+    setForms([...forms, { name: "", time: "", calories: "", hours: "" }]);
     setErrors([...errors, {}]);
   };
 
-  //  VALIDATION
   const validate = () => {
     let valid = true;
 
     const newErrors = forms.map((form) => {
       const err = {};
 
-      // 🔹 Exercise & Meal
       if (type !== "sleep") {
-        if (!form.name.trim()) {
-          err.name = "Required";
-          valid = false;
-        }
-
-        if (!form.time.trim()) {
-          err.time = "Required";
-          valid = false;
-        } else if (!isValidTime(form.time)) {
-          err.time = "Use format like 2PM or 2:10AM";
-          valid = false;
-        }
-
-        if (!form.calories || Number(form.calories) <= 0) {
-          err.calories = "Must be positive";
-          valid = false;
-        }
+        if (!form.name) err.name = "Required";
+        if (!isValidTime(form.time)) err.time = "Invalid format";
+        if (!form.calories || form.calories <= 0) err.calories = "Invalid";
       }
 
-      //  Sleep
       if (type === "sleep") {
-        if (!form.hours) {
-          err.hours = "Required";
-          valid = false;
-        } else if (Number(form.hours) <= 0) {
-          err.hours = "Must be positive";
-          valid = false;
-        } else if (Number(form.hours) > 24) {
-          err.hours = "Max 24 hours";
-          valid = false;
-        }
+        if (!form.hours || form.hours <= 0) err.hours = "Invalid";
       }
+
+      if (Object.keys(err).length) valid = false;
 
       return err;
     });
@@ -85,25 +53,22 @@ const DynamicActivityForm = ({ type, day, handleClose }) => {
     return valid;
   };
 
-  //  SUBMIT
   const handleSubmit = () => {
     if (!validate()) return;
 
     forms.forEach((form) => {
       let activity = { type };
 
-      // Exercise / Meal
-      if (type === "exercise" || type === "meal") {
+      if (type !== "sleep") {
         activity = {
           type,
           title: form.name,
-          time: form.time, // user format
-          time24: convertTo24Hour(form.time), // 🔥 internal use
+          time: form.time,
+          time24: convertTo24Hour(form.time),
           calories: Number(form.calories)
         };
       }
 
-      // Sleep
       if (type === "sleep") {
         activity = {
           type,
@@ -111,91 +76,100 @@ const DynamicActivityForm = ({ type, day, handleClose }) => {
         };
       }
 
-      dispatch(
-        addActivity({
-          dateKey: formatDateKey(day.date),
-          activity
-        })
-      );
+      dispatch(addActivity({
+        dateKey: formatDateKey(day.date),
+        activity
+      }));
     });
 
     handleClose();
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
-      
+    <Box>
+
+      <Typography fontSize={22} fontWeight={600} mb={2}>
+        Add {type}
+      </Typography>
+
       {forms.map((form, index) => (
-        <Box key={index} display="flex" flexDirection="column" gap={2}>
+        <Box
+          key={index}
+          sx={{
+            mb: 3,
+            p: 2,
+            borderRadius: "12px",
+            background: "#f9fafc",
+            border: "1px solid #eef1f6"
+          }}
+        >
 
-          {/*  NAME */}
           {type !== "sleep" && (
-            <TextField
-              label="Name"
-              placeholder="Enter name"
-              value={form.name}
-              onChange={(e) =>
-                handleChange(index, "name", e.target.value)
-              }
-              error={!!errors[index]?.name}
-              helperText={errors[index]?.name}
-            />
+            <>
+              <TextField
+                fullWidth
+                label="Name"
+                value={form.name}
+                onChange={(e) => handleChange(index, "name", e.target.value)}
+                error={!!errors[index]?.name}
+                sx={{ mb: 2 }}
+              />
+
+              <TextField
+                fullWidth
+                label="Time (2PM)"
+                value={form.time}
+                onChange={(e) => handleChange(index, "time", e.target.value)}
+                error={!!errors[index]?.time}
+                sx={{ mb: 2 }}
+              />
+
+              <TextField
+                fullWidth
+                label="Calories"
+                type="number"
+                value={form.calories}
+                onChange={(e) => handleChange(index, "calories", e.target.value)}
+                error={!!errors[index]?.calories}
+              />
+            </>
           )}
 
-          {/*  TIME */}
-          {type !== "sleep" && (
-            <TextField
-              label="Time (e.g. 2PM, 2:10AM)"
-              placeholder="Enter like 2PM"
-              value={form.time}
-              onChange={(e) =>
-                handleChange(index, "time", e.target.value)
-              }
-              error={!!errors[index]?.time}
-              helperText={errors[index]?.time}
-            />
-          )}
-
-          {/*  CALORIES */}
-          {type !== "sleep" && (
-            <TextField
-              label="Calories"
-              type="number"
-              value={form.calories}
-              onChange={(e) =>
-                handleChange(index, "calories", e.target.value)
-              }
-              error={!!errors[index]?.calories}
-              helperText={errors[index]?.calories}
-            />
-          )}
-
-          {/*  SLEEP */}
           {type === "sleep" && (
             <TextField
+              fullWidth
               label="Sleep Hours"
               type="number"
-              placeholder="Enter hours"
               value={form.hours}
-              onChange={(e) =>
-                handleChange(index, "hours", e.target.value)
-              }
+              onChange={(e) => handleChange(index, "hours", e.target.value)}
               error={!!errors[index]?.hours}
-              helperText={errors[index]?.hours}
             />
           )}
+
         </Box>
       ))}
 
-      {/*  ADD MORE FORM */}
+      {/* ADD MORE */}
       <IconButton onClick={addForm}>
         <AddIcon />
       </IconButton>
 
       {/* SUBMIT */}
-      <Button variant="contained" onClick={handleSubmit}>
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={handleSubmit}
+        sx={{
+          mt: 2,
+          padding: "12px",
+          borderRadius: "10px",
+          fontWeight: 600,
+          fontSize: "16px"
+        }}
+      >
         Add {type}
       </Button>
+
     </Box>
   );
 };

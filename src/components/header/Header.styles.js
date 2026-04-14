@@ -18,9 +18,9 @@ export const LeftSection = styled(Box)(() => ({
 }));
 
 export const Title = styled(Box)(() => ({
-  color: "#363434",
-  fontSize: "30px",
+  fontSize: "24px",
   fontWeight: 500,
+  letterSpacing: "1px",
   fontFamily: "sans-serif"
 }));
 

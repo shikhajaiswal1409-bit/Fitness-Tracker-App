@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import { Box, IconButton } from "@mui/material";
 
 export const SectionContainer = styled(Box)(() => ({
-  marginBottom: "30px"
+  marginBottom: "40px"
 }));
 
 export const SectionHeader = styled(Box)(() => ({
@@ -13,8 +13,9 @@ export const SectionHeader = styled(Box)(() => ({
 }));
 
 export const SectionTitle = styled(Box)(() => ({
-  fontSize: "18px",
-  fontWeight: 700
+  fontSize: "22px",
+  fontWeight: 700,
+  color: "#111827"
 }));
 
 export const NavButtons = styled(Box)(() => ({
@@ -23,8 +24,13 @@ export const NavButtons = styled(Box)(() => ({
 }));
 
 export const ArrowButton = styled(IconButton)(() => ({
-  background: "#f3f5fa",
-  borderRadius: "8px"
+  background: "#fff",
+  borderRadius: "10px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+
+  "&:hover": {
+    background: "#f9fafb",
+  }
 }));
 
 export const CardsContainer = styled(Box)(() => ({
