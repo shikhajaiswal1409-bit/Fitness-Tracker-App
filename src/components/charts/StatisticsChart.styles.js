@@ -1,19 +1,3 @@
-// import { styled } from "@mui/material/styles";
-// import { Box } from "@mui/material";
-
-// export const ChartContainer = styled(Box)(() => ({
-//   background: "#fff",
-//   borderRadius: "20px",
-//   padding: "24px",
-//   marginTop: "24px",
-//   boxShadow: "0 8px 25px rgba(0,0,0,0.08)",
-// }));
-
-// export const ChartTitle = styled(Box)(() => ({
-//   fontSize: "22px",
-//   fontWeight: 700,
-//   marginBottom: "20px"
-// }));
 
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
